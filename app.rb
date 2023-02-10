@@ -4,6 +4,28 @@ require 'sinatra/reloader'
 require 'pony'
 require 'sqlite3'
 
+configure do
+  @db = SQLite3::Database.new 'barbershop.db'
+  @db.execute 'CREATE TABLE IF NOT EXISTS
+    "Users"
+    (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "username" VARCHAR,
+      "phone" VARCHAR,
+      "barber" VARCHAR,
+      "datestamp" VARCHAR,
+      "color" VARCHAR
+    );'
+  @db.execute 'CREATE TABLE IF NOT EXISTS
+    "Contacts"
+    (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "mailbox" VARCHAR,
+      "message" TEXT
+    );'
+  @db.close
+end
+
 get '/' do
 	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School</a>"
 end
@@ -34,9 +56,21 @@ post '/visit' do
     return erb :visit
   end
 
-  db = SQLite3::Database.new 'barbershop.sqlite'
-  db.execute "INSERT INTO Visit (Username, Phone, Barber, Datetime, Color) VALUES ('#{@username.to_s}', '#{@phone}', '#{@barber}', '#{@datetime}', '#{@color}')"
-  db.close
+  @db = SQLite3::Database.new 'barbershop.db'
+  @db.execute 'INSERT INTO
+    Users
+    (
+      username,
+      phone,
+      barber,
+      datestamp,
+      color
+    )
+    VALUES
+    (
+      ?,?,?,?,?
+    )', [@username, @phone, @barber, @datetime, @color]
+  @db.close
 
   erb "#{@username} Вы были успешно записаны!"
 end
@@ -49,9 +83,9 @@ post '/contacts' do
   @email = params[:email]
   @comments = params[:comments]
 
-  db = SQLite3::Database.new 'barbershop.sqlite'
-  db.execute "INSERT INTO Contact (Mailbox, Message) VALUES ('#{@email}', '#{@comments}')"
-  db.close
+  @db = SQLite3::Database.new 'barbershop.d'
+  @db.execute "INSERT INTO Contacts (mailbox, message) VALUES ('#{@email}', '#{@comments}')"
+  @db.close
 
   Pony.mail({
     :from => 'pavadomino@gmail.com',
