@@ -21,10 +21,9 @@
   <div class="form-group">
     <label>Выбор парикмахера</label>
     <select name="barber" class="form-control" aria-label=".form-select-sm example">
-      <option selected>Выберите парикмахера</option>
-      <option value="Walter White">Walter White</option>
-      <option value="Jessie Pinkman">Jessie Pinkman</option>
-      <option value="Gus Fring">Gus Fring</option>
+      <option <%= @barber == 'Walter White' ? 'selected' : '' %> value="Walter White">Walter White</option>
+      <option <%= @barber == 'Jessie Pinkman' ? 'selected' : '' %> value="Jessie Pinkman">Jessie Pinkman</option>
+      <option <%= @barber == 'Gus Fring' ? 'selected' : '' %> value="Gus Fring">Gus Fring</option>
     </select>
   </div>
 
