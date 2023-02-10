@@ -1,0 +1,16 @@
+User: Pavel Domino, Phone: 239480923, Datetime: 12.10.2023 12:45, Barber: Gus Fring
+User: Pavel Domino, Phone: 32948023984, Datetime: 15.02.2023 23:00, Barber: Jessie Pinkman
+User: Pavel Domino, Phone: 32948023984, Datetime: 15.02.2023 23:00, Barber: Jessie Pinkman
+User: Pavel, Phone: 2309483209, Datetime: 21.12.2023, Barber: Gus Fring
+User: Hanna, Phone: 290842309, Datetime: 25.10.2022 12:30, Barber: Jessie Pinkman
+User: Hanna, Phone: 290842309, Datetime: 25.10.2022 12:30, Barber: Jessie Pinkman
+User: pavadomino@gmail.com, Phone: +375298021136, Datetime: Dec 22nd at 12:30, Barber: Jessie Pinkman, Color: #fbd75b
+User: Pavel, Phone: +48 500104907, Datetime: 12.10.2023 12:45, Barber: Gus Fring, Color: #e1e1e1
+User: Pavel Domino, Phone: 23908423904, Datetime: 15.02.2023 23:00, Barber: Gus Fring, Color: #a4bdfc
+User: Pavel, Phone: +375298021136, Datetime: 25.10.2022 12:30, Barber: Jessie Pinkman, Color: #7ae7bf
+User: Pavel, Phone: 0948239084, Datetime: Dec 22nd at 12:30, Barber: Walter White, Color: #fbd75b
+User: Hanna Domino, Phone: 239482398472, Datetime: 23.04.2023, Barber: Gus Fring, Color: #a4bdfc
+User: Pavel, Phone: +48 500104907, Datetime: 15.02.2023 23:00, Barber: Walter White, Color: #46d6db
+User: Pavel Domino, Phone: 23908423904, Datetime: 15.02.2023 23:00, Barber: Jessie Pinkman, Color: #ff887c
+User: Pavel, Phone: +375298021136, Datetime: Dec 22nd at 12:30, Barber: Walter White, Color: #fbd75b
+User: admin, Phone: 0948239084, Datetime: 15.02.2023 23:00, Barber: Walter White, Color: #ffb878
