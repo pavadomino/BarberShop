@@ -56,7 +56,7 @@ post '/visit' do
     return erb :visit
   end
 
-  @db = SQLite3::Database.new 'barbershop.db'
+  @db = get_db
   @db.execute 'INSERT INTO
     Users
     (
@@ -83,7 +83,7 @@ post '/contacts' do
   @email = params[:email]
   @comments = params[:comments]
 
-  @db = SQLite3::Database.new 'barbershop.db'
+  @db = get_db
   @db.execute 'INSERT INTO
     Contacts
     (
@@ -113,4 +113,10 @@ post '/contacts' do
   })
 
   erb 'Ваш запрос был отправлен!'
+end
+
+def get_db
+  db = SQLite3::Database.new 'barbershop.db'
+  db.results_as_hash = true
+  return db
 end
