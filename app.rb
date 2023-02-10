@@ -83,8 +83,15 @@ post '/contacts' do
   @email = params[:email]
   @comments = params[:comments]
 
-  @db = SQLite3::Database.new 'barbershop.d'
-  @db.execute "INSERT INTO Contacts (mailbox, message) VALUES ('#{@email}', '#{@comments}')"
+  @db = SQLite3::Database.new 'barbershop.db'
+  @db.execute 'INSERT INTO
+    Contacts
+    (
+      mailbox,
+      message
+    )
+    VALUES
+    (?,?)', [@email, @comments]
   @db.close
 
   Pony.mail({
