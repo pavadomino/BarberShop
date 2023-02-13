@@ -4,8 +4,39 @@ require 'sinatra/reloader'
 require 'pony'
 require 'sqlite3'
 
-configure do
+def get_db
   db = SQLite3::Database.new 'barbershop.db'
+  db.results_as_hash = true
+  return db
+end
+
+def read_mail_creds
+  data = {}
+  file = File.open('/Users/paveldomino/.creds_scripts/.mail', 'r')
+  file.readlines.each do |line|
+    var, val = line.chomp.split(':')
+    data[var] = val
+  end
+  file.close
+  user = data['user']
+  password = data['password']
+  return user, password
+end
+
+def is_barber_exists? db, name
+  db.execute('select * from Barbers where name = ?', [name]).length > 0
+end
+
+def seed_db db, barbers
+  barbers.each do |barber|
+    if !is_barber_exists? db, barber
+      db.execute('insert into Barbers (name) values (?)', [barber])
+    end
+  end
+end
+
+configure do
+  db = get_db
   db.execute 'CREATE TABLE IF NOT EXISTS
     "Users"
     (
@@ -29,6 +60,9 @@ configure do
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "name" TEXT NOT NULL UNIQUE
     );'
+
+  barbers = ['Walter White', 'Jessie Pinkman', 'Gus Fring', 'Roman Pushkin', 'Mike Ermantraut']
+  seed_db db, barbers
   db.close
 end
 
@@ -130,23 +164,4 @@ get '/showusers' do
   db.close
 
   erb :showusers
-end
-
-def get_db
-  db = SQLite3::Database.new 'barbershop.db'
-  db.results_as_hash = true
-  return db
-end
-
-def read_mail_creds
-  data = {}
-  file = File.open('/Users/paveldomino/.creds_scripts/.mail', 'r')
-  file.readlines.each do |line|
-    var, val = line.chomp.split(':')
-    data[var] = val
-  end
-  file.close
-  user = data['user']
-  password = data['password']
-  return user, password
 end
