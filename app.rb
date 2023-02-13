@@ -35,6 +35,12 @@ def seed_db db, barbers
   end
 end
 
+before do
+  db = get_db
+  @list_barbers = db.execute('select name from Barbers;')
+  db.close
+end
+
 configure do
   db = get_db
   db.execute 'CREATE TABLE IF NOT EXISTS
@@ -76,7 +82,7 @@ get '/about' do
 end
 
 get '/visit' do
-	erb :visit
+  erb :visit
 end
 
 post '/visit' do
