@@ -118,7 +118,7 @@ post '/visit' do
     )', [@username, @phone, @barber, @datetime, @color]
   db.close
 
-  erb "#{@username} Вы были успешно записаны!"
+  erb "<h2>#{@username} Вы были успешно записаны!</h2>"
 end
 
 get '/contacts' do
