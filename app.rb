@@ -5,8 +5,8 @@ require 'pony'
 require 'sqlite3'
 
 configure do
-  @db = SQLite3::Database.new 'barbershop.db'
-  @db.execute 'CREATE TABLE IF NOT EXISTS
+  db = SQLite3::Database.new 'barbershop.db'
+  db.execute 'CREATE TABLE IF NOT EXISTS
     "Users"
     (
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,14 +16,20 @@ configure do
       "datestamp" VARCHAR,
       "color" VARCHAR
     );'
-  @db.execute 'CREATE TABLE IF NOT EXISTS
+  db.execute 'CREATE TABLE IF NOT EXISTS
     "Contacts"
     (
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "mailbox" VARCHAR,
       "message" TEXT
     );'
-  @db.close
+  db.execute 'CREATE TABLE IF NOT EXISTS
+    "Barbers"
+    (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "name" TEXT NOT NULL UNIQUE
+    );'
+  db.close
 end
 
 get '/' do
@@ -56,8 +62,8 @@ post '/visit' do
     return erb :visit
   end
 
-  @db = get_db
-  @db.execute 'INSERT INTO
+  db = get_db
+  db.execute 'INSERT INTO
     Users
     (
       username,
@@ -70,7 +76,7 @@ post '/visit' do
     (
       ?,?,?,?,?
     )', [@username, @phone, @barber, @datetime, @color]
-  @db.close
+  db.close
 
   erb "#{@username} Вы были успешно записаны!"
 end
@@ -83,8 +89,8 @@ post '/contacts' do
   @email = params[:email]
   @comments = params[:comments]
 
-  @db = get_db
-  @db.execute 'INSERT INTO
+  db = get_db
+  db.execute 'INSERT INTO
     Contacts
     (
       mailbox,
@@ -92,11 +98,13 @@ post '/contacts' do
     )
     VALUES
     (?,?)', [@email, @comments]
-  @db.close
+  db.close
+
+  user, password = read_mail_creds
 
   Pony.mail({
-    :from => 'pavadomino@gmail.com',
-    :to => 'pavadomino@gmail.com',
+    :from => user,
+    :to => user,
     :via => :smtp,
     :subject => "Message from #{@email}",
     :body => "Please check comments from the client:\n#{@comments}",
@@ -105,8 +113,8 @@ post '/contacts' do
       :address              => 'smtp.gmail.com',
       :port                 => '587',
       :enable_starttls_auto => true,
-      :user_name            => 'pavadomino@gmail.com',
-      :password             => '',
+      :user_name            => user,
+      :password             => password,
       :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
       :domain               => "gmail.com" # the HELO domain provided by the client to the server
     }
@@ -115,8 +123,30 @@ post '/contacts' do
   erb 'Ваш запрос был отправлен!'
 end
 
+get '/showusers' do
+  string = ''
+  db = get_db
+  @results = db.execute 'SELECT * FROM Users ORDER BY id DESC;'
+  db.close
+
+  erb :showusers
+end
+
 def get_db
   db = SQLite3::Database.new 'barbershop.db'
   db.results_as_hash = true
   return db
+end
+
+def read_mail_creds
+  data = {}
+  file = File.open('/Users/paveldomino/.creds_scripts/.mail', 'r')
+  file.readlines.each do |line|
+    var, val = line.chomp.split(':')
+    data[var] = val
+  end
+  file.close
+  user = data['user']
+  password = data['password']
+  return user, password
 end
